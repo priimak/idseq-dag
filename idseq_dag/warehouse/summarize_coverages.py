@@ -46,7 +46,7 @@ def main():
     warehouse_dir = "/mnt/idseq/warehouse"
     scratch_dir = f"{warehouse_dir}/tmp"
     result_file = f"{warehouse_dir}/coverage_histograms.csv"
-    command.execute(f"mkdir -p {scratch_dir}")
+    command.execute(f"rm -rf {scratch_dir}; mkdir -p {scratch_dir}")
     df = pd.DataFrame()
     for align_viz_s3_path in sample_lists.CAMI_Airways_align_viz:
         s3_basenames = s3.list_files(align_viz_s3_path, folder = True)
