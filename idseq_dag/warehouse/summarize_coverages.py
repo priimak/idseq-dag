@@ -9,6 +9,34 @@ import idseq_dag.util.s3 as s3
 import idseq_dag.util.command as command
 import sample_lists
 
+def parse_tree(current_dict, results, key = None):
+    """
+    Produce a dictionary like:
+      { "accession 1": { "coverage_summary": ... },
+        "accession 2": { "coverage_summary": ... },
+        ...
+      }
+    from a dictionary like:
+      { "family taxid 1": {
+          "genus taxid 1": {
+            "species taxid 1": {
+              "accession 1": { "coverage_summary": ... },
+            }
+          },
+          "genus taxid 2": {
+            "species taxid 2": {
+              "accession 2": { "coverage_summary": ... },
+            }
+          }
+        }
+      }
+    """
+    if "coverage_summary" in current_dict:
+        results[key] = current_dict
+    else:
+        for key2, value2 in current_dict.items():
+            parse_tree(sub_dict, results, key2)
+
 def main():
     '''
     Make a csv containing a coverage histogram for each sample and taxid.
@@ -33,10 +61,12 @@ def main():
             coverage_histogram["taxid"] = taxid
             coverage_file = s3.fetch_from_s3(s3f, scratch_dir)
             with open(coverage_file, 'r') as f:
-                coverage_map = json.load(f)
-            for accession, data in coverage_map.iteritems():
+                align_viz_map = json.load(f)
+            coverage_map = {}
+            parse_tree(align_viz_map, coverage_map)
+            for accession, data in coverage_map.items():
                 coverage_by_locus = data["coverage_summary"]["coverage"]
-                for loci, coverage in coverage_by_locus.iteritems():
+                for loci, coverage in coverage_by_locus.items():
                     start_locus, end_locus = loci.split("-")
                     n_bases = int(end_locus) - int(start_locus) + 1
                     coverage_histogram[coverage] += n_bases
