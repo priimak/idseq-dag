@@ -44,3 +44,6 @@ def main():
         df.to_csv(result_file) # keep overwriting
         command.execute(f"rm {scratch_dir}/*")
         print(f"Finished processing {align_viz_path}")
+
+if __name__ == "__main__":
+    main()
