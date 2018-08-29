@@ -49,6 +49,7 @@ def main():
     command.execute(f"rm -rf {scratch_dir}; mkdir -p {scratch_dir}")
     df = pd.DataFrame()
     for align_viz_s3_path in sample_lists.CAMI_Airways_align_viz:
+        print(f"Starting to process {align_viz_s3_path}")
         s3_basenames = s3.list_files(align_viz_s3_path, folder = True)
         s3_files = [f"{align_viz_s3_path.rstrip('/')}/{basename}" for basename in s3_basenames]
         for s3f in s3_files:
@@ -79,7 +80,7 @@ def main():
         df = df.fillna(0)
         df.to_csv(result_file) # keep overwriting
         command.execute(f"rm {scratch_dir}/*")
-        print(f"Finished processing {align_viz_path}")
+        print(f"Finished processing {align_viz_s3_path}")
 
 if __name__ == "__main__":
     main()
