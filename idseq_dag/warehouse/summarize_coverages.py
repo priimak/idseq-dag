@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+import os
 import json
 import pandas as pd
 from collections import defaultdict
 
-import idseq_dag.util.command as command
 import idseq_dag.util.s3 as s3
+import idseq_dag.util.command as command
 import sample_lists
 
 def main():
@@ -20,7 +21,8 @@ def main():
     command.execute(f"mkdir -p {scratch_dir}")
     df = pd.DataFrame()
     for align_viz_s3_path in sample_lists.CAMI_Airways_align_viz:
-        s3_files = s3.list_files(align_viz_s3_path, folder = True)
+        s3_basenames = s3.list_files(align_viz_s3_path, folder = True)
+        s3_files = [f"{align_viz_s3_path.rstrip('/')}/{basename}" for basename in s3_basenames]
         for s3f in s3_files:
             # example s3f: s3://idseq-samples-staging/samples/87/901/postprocess/2.7/align_viz/nt.species.96230.align_viz.json
             _hit_type, _tax_level, taxid, _suffix = os.path.basename(s3f).split(".", 3)
@@ -29,7 +31,7 @@ def main():
             coverage_histogram = defaultdict(lambda: 0)
             coverage_histogram["project_id"], coverage_histogram["sample_id"], _dummy, coverage_histogram["pipeline_version"] = s3f.split("/")[4:8]
             coverage_histogram["taxid"] = taxid
-            coverage_file = s3.fetch_from_s3(s3f, work_dir)
+            coverage_file = s3.fetch_from_s3(s3f, scratch_dir)
             with open(coverage_file, 'r') as f:
                 coverage_map = json.load(f)
             for accession, data in coverage_map.iteritems():
