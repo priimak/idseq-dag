@@ -6,7 +6,7 @@ from collections import defaultdict
 
 import idseq_dag.util.command as command
 import idseq_dag.util.s3 as s3
-import sample_list
+import sample_lists
 
 def main():
     '''
@@ -19,8 +19,8 @@ def main():
     result_file = f"{warehouse_dir}/coverage_histograms.csv"
     command.execute(f"mkdir -p {scratch_dir}")
     df = pd.DataFrame()
-    for align_viz_path in sample_list.top_completed:
-        s3_files = s3.list(align_viz_s3)
+    for align_viz_s3_path in sample_lists.CAMI_Airways_align_viz:
+        s3_files = s3.list_files(align_viz_s3_path, folder = True)
         for s3f in s3_files:
             # example s3f: s3://idseq-samples-staging/samples/87/901/postprocess/2.7/align_viz/nt.species.96230.align_viz.json
             _hit_type, _tax_level, taxid, _suffix = os.path.basename(s3f).split(".", 3)
