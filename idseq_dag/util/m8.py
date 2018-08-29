@@ -201,7 +201,7 @@ def call_hits_m8(input_m8, lineage_map_path, accession2taxid_dict_path,
         for accession_id, e_value in accessions:
             # Accumulate hits to be considered during consensus hit calling.
             # Include hits within a certain margin of the best e-value.
-            margin = 15 # for log-transformed e-values
+            margin = 100 # in terms of log-transformed e-values
             if service == "gsnap":
                 condition = (e_value <= my_best_evalue * (10**margin))
             else:
