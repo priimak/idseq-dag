@@ -19,6 +19,17 @@ IOSTREAM_UPLOADS = multiprocessing.Semaphore(MAX_CONCURRENT_UPLOAD_OPERATIONS)
 def split_identifiers(s3_path):
     return s3_path[5:].split("/", 1)
 
+def list_files(s3_path, folder = False):
+    """
+    Works exactly like 'aws s3 ls', but returns the files as a python list.
+    If folder == True, the function assumes you want to treat s3_path as a "folder" and list its contents,
+    so it handles subtleties related to the need for a single final "/" in the path for you.
+    """
+    if folder:
+        s3_path = s3_path.rstrip("/") + "/"
+    lines = command.execute_with_output("aws s3 ls %s | awk '{print $4}'" % s3_path).split("\n")
+    return list(filter(None, lines))
+
 def check_s3_presence(s3_path):
     """True if s3_path exists. False otherwise."""
     try:
