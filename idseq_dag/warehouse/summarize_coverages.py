@@ -66,12 +66,14 @@ def main():
                 align_viz_map = json.load(f)
             coverage_map = {}
             parse_tree(align_viz_map, coverage_map)
+            print(f"Starting to process accessions for sample {sample_id}: {coverage_map.keys()}")
             for accession, data in coverage_map.items():
                 coverage_by_locus = data["coverage_summary"]["coverage"]
                 for loci, coverage in coverage_by_locus.items():
                     start_locus, end_locus = loci.split("-")
                     n_bases = int(end_locus) - int(start_locus) + 1
                     coverage_histogram[coverage] += n_bases
+                print(f"processed {accession}")
             coverage_df = pd.DataFrame(coverage_histogram, index=[f"{project_id}-{sample_id}-{pipeline_version}-{taxid}"])
             df = df.append(coverage_df)
         df = df.fillna(0)
