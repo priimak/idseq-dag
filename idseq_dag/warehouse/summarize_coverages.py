@@ -34,7 +34,7 @@ def parse_tree(current_dict, results, key = None):
     if "coverage_summary" in current_dict:
         results[key] = current_dict
     else:
-        for key2, value2 in current_dict.items():
+        for key2, sub_dict in current_dict.items():
             parse_tree(sub_dict, results, key2)
 
 def main():
