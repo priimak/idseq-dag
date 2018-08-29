@@ -57,8 +57,10 @@ def main():
             if int(taxid) < 0:
                 continue
             coverage_histogram = defaultdict(lambda: 0)
-            coverage_histogram["project_id"], coverage_histogram["sample_id"], _dummy, coverage_histogram["pipeline_version"] = s3f.split("/")[4:8]
-            coverage_histogram["taxid"] = taxid
+            project_id, sample_id, _dummy, pipeline_version = s3f.split("/")[4:8]
+            coverage_histogram.update({
+                "taxid": taxid, "project_id": project_id, "sample_id": sample_id, "pipeline_version": pipeline_version
+            })
             coverage_file = s3.fetch_from_s3(s3f, scratch_dir)
             with open(coverage_file, 'r') as f:
                 align_viz_map = json.load(f)
