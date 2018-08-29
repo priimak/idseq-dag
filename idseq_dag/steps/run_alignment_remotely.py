@@ -52,7 +52,7 @@ class PipelineStepRunAlignmentRemotely(PipelineStep):
         accession2taxid_db = fetch_from_s3(self.additional_files["accession2taxid_db"], self.ref_dir_local, allow_s3mi=True)
 
         m8.call_hits_m8(output_m8, lineage_db, accession2taxid_db,
-                        deduped_output_m8, output_hitsummary)
+                        deduped_output_m8, output_hitsummary, service)
 
         # check deuterostome
         deuterostome_db = None
@@ -243,7 +243,7 @@ class PipelineStepRunAlignmentRemotely(PipelineStep):
 
         base_str = "mkdir -p {remote_work_dir} ; {download_input_from_s3} ; "
         if service == "gsnap":
-            commands = base_str + "{remote_home_dir}/bin/gsnapl -A m8 --batch=0 --use-shared-memory=0 --gmap-mode=none --npaths=100 --ordered -t 36 --maxsearch=1000 --max-mismatches=40 -D {remote_index_dir} -d nt_k16 {remote_input_files} > {multihit_remote_outfile}"
+            commands = base_str + "{remote_home_dir}/bin/gsnapl -M 3 -A m8 --batch=0 --use-shared-memory=0 --gmap-mode=none --npaths=100 --ordered -t 36 --maxsearch=1000 --max-mismatches=40 -D {remote_index_dir} -d nt_k16 {remote_input_files} > {multihit_remote_outfile}"
         else:
             commands = base_str + "/usr/local/bin/rapsearch -d {remote_index_dir}/nr_rapsearch -e -6 -l 10 -a T -b 0 -v 50 -z 24 -q {remote_input_files} -o {multihit_remote_outfile}"
 

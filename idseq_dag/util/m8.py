@@ -76,7 +76,7 @@ def iterate_m8(m8_file, debug_caller=None, logging_interval=25000000):
 
 @command.run_in_subprocess
 def call_hits_m8(input_m8, lineage_map_path, accession2taxid_dict_path,
-                 output_m8, output_summary):
+                 output_m8, output_summary, service):
     """
     Determine the optimal taxon assignment for each read from the alignment
     results. When a read aligns to multiple distinct references, we need to
@@ -199,7 +199,14 @@ def call_hits_m8(input_m8, lineage_map_path, accession2taxid_dict_path,
         my_best_evalue = min(acc[1] for acc in accessions)
         hits = [{}, {}, {}]
         for accession_id, e_value in accessions:
-            if e_value == my_best_evalue:
+            # Accumulate hits to be considered during consensus hit calling.
+            # Include hits within a certain margin of the best e-value.
+            margin = 15 # for log-transformed e-values
+            if service == "gsnap":
+                condition = (e_value <= my_best_evalue * (10**margin))
+            else:
+                condition = (e_value <= my_best_evalue + margin)
+            if condition:
                 accumulate(hits, accession_id)
         summary[read_id] = my_best_evalue, call_hit_level(hits)
         count += 1
