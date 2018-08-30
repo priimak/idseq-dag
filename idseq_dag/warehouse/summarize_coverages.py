@@ -9,6 +9,13 @@ import idseq_dag.util.s3 as s3
 import idseq_dag.util.command as command
 import sample_lists
 
+def can_convert_to_int(x):
+    try:
+        int(x)
+        return True
+    except:
+        return False
+
 def parse_tree(current_dict, results, key = None):
     """
     Produce a dictionary like:
@@ -77,6 +84,10 @@ def main():
                 print(f"processed {accession}")
             coverage_df = pd.DataFrame(coverage_histogram, index=[f"{project_id}-{sample_id}-{pipeline_version}-{taxid}"])
             df = df.append(coverage_df)
+        coverage_values = [int(col) for col in df.columns if can_convert_to_int(col)]
+        id_columns = [col for col in df.columns if not can_convert_to_int(col)]
+        ordered_columns = id_columns + [str(value) for value in range(1, max(coverage_values) + 1)]
+        df = df.reindex(columns = ordered_columns)
         df = df.fillna(0)
         df.to_csv(result_file) # keep overwriting
         command.execute(f"rm {scratch_dir}/*")
