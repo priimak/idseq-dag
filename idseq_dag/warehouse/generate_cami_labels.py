@@ -24,12 +24,14 @@ def main():
     for sample_name, mapping in mapping_files.items():
         print(f"Starting to process {sample_name}")
         taxon_counts = defaultdict(lambda: 0)
-        with gzip.open(mapping, 'rb') as input_file:
-            for line in input_file:
-                taxid = line.split("\t")[2] # columns: anonymous_read_id, genome_id, tax_id, read_id
+        with gzip.open(mapping, 'r') as input_file:
+            for idx, line in enumerate(input_file):
+                taxid = line.decode("utf-8").split("\t")[2] # columns: anonymous_read_id, genome_id, tax_id, read_id
                 taxid_lineage = lineage_map.get(taxid, lineage.NULL_LINEAGE) # note: taxid assigned to a read can be any level (family, genus, ...)
                 for id in taxid_lineage:
                     taxon_counts[id] += 1
+                if idx % 1000 == 0:
+                    printf(f"{idx // 1000} taxids processed")
         df = pd.concat([df] + [pd.DataFrame([sample_name, taxid, count], columns = ['sample_name', 'taxid', 'count']) for taxid, count in taxon_counts.items()])
         df.to_csv(result_file)
         print(f"Finished processing {sample_name}")
