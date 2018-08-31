@@ -1,3 +1,6 @@
+def clean_name(sample_name):
+    retur sample_name.replace(".", "-")
+
 CAMI_Airways_reads_mapping = {sample_name: f"/home/ubuntu/cdebourcy/cami/short_read/{sample_name}/reads/reads_mapping.tsv.gz" for sample_name in [
                                  "2017.12.04_18.56.22_sample_10", "2017.12.04_18.56.22_sample_12", "2017.12.04_18.56.22_sample_26", "2017.12.04_18.56.22_sample_4",
                                  "2017.12.04_18.56.22_sample_8", "2017.12.04_18.56.22_sample_11", "2017.12.04_18.56.22_sample_23", "2017.12.04_18.56.22_sample_27",

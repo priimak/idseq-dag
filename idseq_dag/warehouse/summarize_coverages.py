@@ -67,7 +67,7 @@ def main():
             coverage_histogram = defaultdict(lambda: 0)
             project_id, sample_id, _dummy, pipeline_version = s3f.split("/")[4:8]
             coverage_histogram.update({
-                "sample_name": sample_name, "taxid": taxid, "project_id": project_id, "sample_id": sample_id, "pipeline_version": pipeline_version
+                "sample_name": sample_lists.clean_name(sample_name), "taxid": taxid, "project_id": project_id, "sample_id": sample_id, "pipeline_version": pipeline_version
             })
             coverage_file = s3.fetch_from_s3(s3f, scratch_dir)
             with open(coverage_file, 'r') as f:

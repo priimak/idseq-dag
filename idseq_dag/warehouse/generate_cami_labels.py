@@ -32,7 +32,7 @@ def main():
                     taxon_counts[id] += 1
                 if idx % 10**6 == 0:
                     print(f"{idx // 10**6}M reads processed")
-        df = pd.concat([df] + [pd.DataFrame([[sample_name, taxid, count]],
+        df = pd.concat([df] + [pd.DataFrame([[sample_lists.clean_name(sample_name), taxid, count]],
                                             columns = ['sample_name', 'taxid', 'count'],
                                             index = [f"{sample_name}-{taxid}"]) for taxid, count in taxon_counts.items()])
         df.to_csv(result_file)
