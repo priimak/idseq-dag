@@ -55,7 +55,7 @@ def main():
     result_file = f"{warehouse_dir}/coverage_histograms.csv"
     command.execute(f"rm -rf {scratch_dir}; mkdir -p {scratch_dir}")
     df = pd.DataFrame()
-    for align_viz_s3_path in sample_lists.CAMI_Airways_align_viz:
+    for sample_name, align_viz_s3_path in sample_lists.CAMI_Airways_align_viz.items():
         print(f"Starting to process {align_viz_s3_path}")
         s3_basenames = s3.list_files(align_viz_s3_path, folder = True)
         s3_files = [f"{align_viz_s3_path.rstrip('/')}/{basename}" for basename in s3_basenames]
@@ -67,7 +67,7 @@ def main():
             coverage_histogram = defaultdict(lambda: 0)
             project_id, sample_id, _dummy, pipeline_version = s3f.split("/")[4:8]
             coverage_histogram.update({
-                "taxid": taxid, "project_id": project_id, "sample_id": sample_id, "pipeline_version": pipeline_version
+                "sample_name": sample_name, "taxid": taxid, "project_id": project_id, "sample_id": sample_id, "pipeline_version": pipeline_version
             })
             coverage_file = s3.fetch_from_s3(s3f, scratch_dir)
             with open(coverage_file, 'r') as f:
