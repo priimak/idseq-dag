@@ -31,7 +31,7 @@ def main():
                 for id in taxid_lineage:
                     taxon_counts[id] += 1
                 if idx % 1000 == 0:
-                    printf(f"{idx // 1000} taxids processed")
+                    print(f"{idx // 1000} taxids processed")
         df = pd.concat([df] + [pd.DataFrame([sample_name, taxid, count], columns = ['sample_name', 'taxid', 'count']) for taxid, count in taxon_counts.items()])
         df.to_csv(result_file)
         print(f"Finished processing {sample_name}")
