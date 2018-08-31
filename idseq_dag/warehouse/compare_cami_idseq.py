@@ -2,6 +2,8 @@
 
 import os
 import pandas as pd
+import numpy as np
+from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 
 import idseq_dag.util.command as command
@@ -23,7 +25,10 @@ def main():
                                  cami_df['tax_level'] == 2 & cami_df['taxid'] > 0]
         df = pd.merge(idseq_genus, cami_genus, how='outer', on='taxid', suffixes=('_idseq', '_cami'))
         df = df.fillna(0)
+        rms = np.sqrt(mean_squared_error(df['count_cami'], df['count_idseq']))
         plt.plot('count_idseq', 'count_cami', data=df)
+        plt.title(sample_name)
+        plt.annotate(f"RMS error = {rms}", xy=(0.05, 0.95), xycoords='axes fraction')
         plt.save_fig(f"{figure_dir}/{clean_sample_name}.png", format="png")
 
 if __name__ == "__main__":
