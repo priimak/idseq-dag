@@ -30,8 +30,8 @@ def main():
                 taxid_lineage = lineage_map.get(taxid, lineage.NULL_LINEAGE) # note: taxid assigned to a read can be any level (family, genus, ...)
                 for id in taxid_lineage:
                     taxon_counts[id] += 1
-                if idx % 1000 == 0:
-                    print(f"{idx // 1000}k taxids processed")
+                if idx % 10**6 == 0:
+                    print(f"{idx // 10**6}M taxids processed")
         df = pd.concat([df] + [pd.DataFrame([sample_name, taxid, count], columns = ['sample_name', 'taxid', 'count']) for taxid, count in taxon_counts.items()])
         df.to_csv(result_file)
         print(f"Finished processing {sample_name}")
