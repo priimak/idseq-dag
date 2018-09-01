@@ -20,7 +20,7 @@ def main():
     lineage_map = shelve.open(lineage_db.replace('.db', ''), 'r')
 
     mapping_files = sample_lists.CAMI_Airways_reads_mapping
-    df = pd.DataFrame(columns=['sample_name', 'taxid', 'count'])
+    df = pd.DataFrame()
     for sample_name, mapping in mapping_files.items():
         print(f"Starting to process {sample_name}")
         taxon_counts = defaultdict(lambda: 0)
@@ -28,12 +28,13 @@ def main():
             for idx, line in enumerate(input_file):
                 taxid = line.decode("utf-8").split("\t")[2] # columns: anonymous_read_id, genome_id, tax_id, read_id
                 taxid_lineage = lineage_map.get(taxid, lineage.NULL_LINEAGE) # note: taxid assigned to a read can be any level (family, genus, ...)
-                for id in taxid_lineage:
+                for index, id in enumerate(taxid_lineage, 1):
+                    tax_levels[id] = index
                     taxon_counts[id] += 1
                 if idx % 10**6 == 0:
                     print(f"{idx // 10**6}M reads processed")
-        df = pd.concat([df] + [pd.DataFrame([[sample_lists.clean_name(sample_name), taxid, count]],
-                                            columns = ['sample_name', 'taxid', 'count'],
+        df = pd.concat([df] + [pd.DataFrame([[sample_lists.clean_name(sample_name), taxid, tax_levels[taxid], count]],
+                                            columns = ['sample_name', 'taxid', 'tax_level', 'count'],
                                             index = [f"{sample_name}-{taxid}"]) for taxid, count in taxon_counts.items()])
         df.to_csv(result_file)
         print(f"Finished processing {sample_name}")
