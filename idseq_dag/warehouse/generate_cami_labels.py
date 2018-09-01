@@ -24,6 +24,7 @@ def main():
     for sample_name, mapping in mapping_files.items():
         print(f"Starting to process {sample_name}")
         taxon_counts = defaultdict(lambda: 0)
+        tax_levels = {}
         with gzip.open(mapping, 'r') as input_file:
             for idx, line in enumerate(input_file):
                 taxid = line.decode("utf-8").split("\t")[2] # columns: anonymous_read_id, genome_id, tax_id, read_id
