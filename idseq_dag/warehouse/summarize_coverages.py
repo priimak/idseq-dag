@@ -66,7 +66,7 @@ def main():
             _hit_type, tax_level_str, taxid, _suffix = os.path.basename(s3f).split(".", 3)
             if int(taxid) < 0:
                 continue
-            tax_level = LEVEL_STR_TO_INT.get(tax_level_str)
+            tax_level = int(LEVEL_STR_TO_INT.get(tax_level_str))
             coverage_histogram = defaultdict(lambda: 0)
             project_id, sample_id, _dummy, pipeline_version = s3f.split("/")[4:8]
             coverage_histogram.update({
