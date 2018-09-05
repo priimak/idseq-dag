@@ -7,6 +7,7 @@ from collections import defaultdict
 
 import idseq_dag.util.s3 as s3
 import idseq_dag.util.command as command
+import idseq_dag.util.data_wrangling as dw
 import sample_lists
 
 LEVEL_STR_TO_INT = {'species': 1, 'genus': 2}

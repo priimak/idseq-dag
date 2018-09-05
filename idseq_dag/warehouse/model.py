@@ -17,11 +17,11 @@ def main():
                            tax_level=2)
     label_df = dw.subset(pd.read_csv(cami_labels, index_col=[0]),
                          tax_level=2)
-    df = pd.merge(feature_df, label_df, how='outer', on=['taxid', 'sample_name'], suffixes=('', ''))
+    df = pd.merge(feature_df, label_df, how='outer', on=['taxid', 'tax_level', 'sample_name'], suffixes=('', ''))
     df = df.fillna(0)
 
-    Y = df['count_label']
-    coverage_values = [col for col in df.columns if can_convert_to_int(col)]
+    Y = df['count']
+    coverage_values = [col for col in df.columns if dw.can_convert_to_int(col)]
     X = df.reindex(columns = coverage_values)
 
     print(X)
