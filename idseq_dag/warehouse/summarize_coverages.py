@@ -93,9 +93,10 @@ def main():
         ordered_columns = id_columns + [str(value) for value in range(1, max(coverage_values) + 1)]
         df = df.reindex(columns = ordered_columns)
         df = df.fillna(0)
-        df.to_csv(result_file) # keep overwriting
+        df.to_csv(f"{result_file}__tmp") # keep overwriting
         command.execute(f"rm {scratch_dir}/*")
         print(f"Finished processing {align_viz_s3_path}")
+    command.execute(f"mv {result_file}__tmp {result_file}")
 
 if __name__ == "__main__":
     main()
