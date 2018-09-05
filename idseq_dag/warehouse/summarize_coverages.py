@@ -9,6 +9,8 @@ import idseq_dag.util.s3 as s3
 import idseq_dag.util.command as command
 import sample_lists
 
+LEVEL_STR_TO_INT = {'species': 1, 'genus': 2}
+
 def can_convert_to_int(x):
     try:
         int(x)
@@ -61,13 +63,15 @@ def main():
         s3_files = [f"{align_viz_s3_path.rstrip('/')}/{basename}" for basename in s3_basenames]
         for s3f in s3_files:
             # example s3f: s3://idseq-samples-staging/samples/87/901/postprocess/2.7/align_viz/nt.species.96230.align_viz.json
-            _hit_type, _tax_level, taxid, _suffix = os.path.basename(s3f).split(".", 3)
+            _hit_type, tax_level_str, taxid, _suffix = os.path.basename(s3f).split(".", 3)
             if int(taxid) < 0:
                 continue
+            tax_level = LEVEL_STR_TO_INT.get(tax_level_str)
             coverage_histogram = defaultdict(lambda: 0)
             project_id, sample_id, _dummy, pipeline_version = s3f.split("/")[4:8]
             coverage_histogram.update({
-                "sample_name": sample_lists.clean_name(sample_name), "taxid": taxid, "project_id": project_id, "sample_id": sample_id, "pipeline_version": pipeline_version
+                "sample_name": sample_lists.clean_name(sample_name), "taxid": taxid, "tax_level": tax_level,
+                "project_id": project_id, "sample_id": sample_id, "pipeline_version": pipeline_version
             })
             coverage_file = s3.fetch_from_s3(s3f, scratch_dir)
             with open(coverage_file, 'r') as f:
