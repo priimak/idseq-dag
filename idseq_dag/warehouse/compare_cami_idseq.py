@@ -30,10 +30,11 @@ def main():
         df = pd.merge(idseq_genus, cami_genus, how='outer', on='taxid', suffixes=('_idseq', '_cami'))
         df = df.fillna(0)
         rms = np.sqrt(mean_squared_error(df['count_cami'], df['count_idseq']))
+        plt.ticklabel_format(style='sci', scilimits=(0,0))
         plt.scatter('count_idseq', 'count_cami', data=df, c='b')
         plt.xlabel('idseq count ((NT.r + NR.r)/2)')
         plt.ylabel('cami count')
-        plt.title(f"{sample_name} (RMS error = {round(rms, 2)})")
+        plt.title(f"{sample_name}\n(RMS error = {round(rms, 2)})")
         plt.savefig(f"{figure_dir}/{clean_sample_name}.png", format="png")
     command.execute(f"aws s3 cp {figure_dir} s3://idseq-samples-test/charles/ --recursive")
 
