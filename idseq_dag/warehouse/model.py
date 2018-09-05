@@ -3,6 +3,9 @@
 import pandas as pd
 import tensorflow as tf
 
+import idseq_dag.util.command as command
+import idseq_dag.util.data_wrangling as dw
+
 def main():
     warehouse_dir = "/mnt/idseq/warehouse"
     model_dir = f"{warehouse_dir}/models"
