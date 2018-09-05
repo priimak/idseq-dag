@@ -4,6 +4,8 @@ import os
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_squared_error
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import idseq_dag.util.command as command
@@ -31,7 +33,7 @@ def main():
         plt.plot('count_idseq', 'count_cami', data=df)
         plt.title(sample_name)
         plt.annotate(f"RMS error = {rms}", xy=(0.05, 0.95), xycoords='axes fraction')
-        plt.save_fig(f"{figure_dir}/{clean_sample_name}.png", format="png")
+        plt.savefig(f"{figure_dir}/{clean_sample_name}.png", format="png")
 
 if __name__ == "__main__":
     main()
