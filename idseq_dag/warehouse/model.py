@@ -85,5 +85,8 @@ def main():
         test_MSE = sess.run(loss_op, feed_dict={X: X_test, Y: Y_test})
         print(f"Test RMSE = {math.sqrt(test_MSE)}")
 
+        Y_test_pred = sess.run(Y_pred, feed_dict={X: X_test})
+        print(f"Predicted abundances: {Y_test_pred}")
+
 if __name__ == "__main__":
     main()
