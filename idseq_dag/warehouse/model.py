@@ -26,14 +26,11 @@ def main():
     train_df = df.loc[df['sample_name'] != "2017-12-04_18-56-22_sample_23"]
     test_df = df.loc[df['sample_name'] == "2017-12-04_18-56-22_sample_23"]
 
-    Y_train = train_df['count']
-    Y_test = test_df['count']
+    Y_train = train_df[['count']]
+    Y_test = test_df[['count']]
     coverage_values = [col for col in df.columns if dw.can_convert_to_int(col)]
     X_train = train_df.reindex(columns = coverage_values)
     X_test = test_df.reindex(columns = coverage_values)
-
-    print(Y_train)
-    print(Y_test)
 
     # Build model
     learning_rate = 0.1
@@ -76,8 +73,8 @@ def main():
         for step in range(0, num_steps):
             batch_start = step*batch_size
             batch_end = batch_start + batch_size - 1
-            batch_x = X_train[batch_start:batch_end]
-            batch_y = Y_train[batch_start:batch_end]
+            batch_x = X_train.iloc[batch_start:batch_end]
+            batch_y = Y_train.iloc[batch_start:batch_end]
             sess.run(train_op, feed_dict={X: batch_x, Y: batch_y})
             if step % display_step == 0:
                 loss = sess.run(loss_op, feed_dict={X: batch_x, Y: batch_y})
@@ -86,7 +83,7 @@ def main():
         print("Optimization Finished!")
 
         test_MSE = sess.run(loss_op, feed_dict={X: X_test, Y: Y_test})
-        print(f"Test MSE = {test_MSE}")
+        print(f"Test RMSE = {math.sqrt(test_MSE)}")
 
 if __name__ == "__main__":
     main()
