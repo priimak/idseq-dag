@@ -45,18 +45,9 @@ def main():
     X = tf.placeholder("float", [None, num_input])
     Y = tf.placeholder("float", [None, num_output])
 
-    weights = {
-        'h1': tf.Variable(tf.random_normal([num_input, n_hidden1])),
-        'out': tf.Variable(tf.random_normal([n_hidden1, num_output]))
-    }
-    biases = {
-        'b1': tf.Variable(tf.random_normal([n_hidden1])),
-        'out': tf.Variable(tf.random_normal([num_output]))
-    }
-
     def neural_net(x):
-        layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
-        out_layer = tf.matmul(layer1, weights['out']) + biases['out']
+        layer1 = tf.layers.dense(x, n_hidden1, activation=tf.nn.relu)
+        out_layer = tf.layers.dense(layer1, num_output)
         return out_layer
 
     Y_pred = neural_net(X)
