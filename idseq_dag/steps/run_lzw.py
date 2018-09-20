@@ -98,7 +98,7 @@ class PipelineStepRunLZW(PipelineStep):
     @staticmethod
     def generate_lzw_filtered(fasta_files, output_files, cutoff_fractions):
 
-        cutoff_fractions = [0.1]
+        cutoff_fractions = [0.01]
 
         assert len(fasta_files) == len(output_files)
 
