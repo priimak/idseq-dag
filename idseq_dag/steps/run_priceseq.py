@@ -24,7 +24,7 @@ class PipelineStepRunPriceSeq(PipelineStep):
             f"{f}_priceseqfilter_output.{file_type}" for f in input_files
         ]
 
-        params = ["PriceSeqFilter", '-a', '12', '-rnf', '90', '-log', 'c']
+        params = ["PriceSeqFilter", '-a', '16', '-rnf', '90', '-log', 'c']
         if is_paired:
             params.extend([
                 '-fp', input_files[0], input_files[1], '-op', price_out[0],
@@ -33,7 +33,7 @@ class PipelineStepRunPriceSeq(PipelineStep):
         else:
             params.extend(['-f', input_files[0], '-o', price_out[0]])
         if "fasta" not in file_type:  # Default fastq. Explicitly specify fasta.
-            params.extend(['-rqf', '85', '0.98'])
+            params.extend(['-rqf', '80', '0.95'])
         cmd = " ".join(params)
         command.execute(cmd)
 
