@@ -33,7 +33,7 @@ class PipelineStepRunPriceSeq(PipelineStep):
         else:
             params.extend(['-f', input_files[0], '-o', price_out[0]])
         if "fasta" not in file_type:  # Default fastq. Explicitly specify fasta.
-            params.extend(['-rqf', '80', '0.95'])
+            params.extend(['-rqf', '82', '0.97'])
         cmd = " ".join(params)
         command.execute(cmd)
 
