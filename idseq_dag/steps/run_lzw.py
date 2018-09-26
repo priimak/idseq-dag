@@ -97,6 +97,8 @@ class PipelineStepRunLZW(PipelineStep):
 
     @staticmethod
     def generate_lzw_filtered(fasta_files, output_files, cutoff_fractions):
+        cutoff_fractions = [0.25]
+
         assert len(fasta_files) == len(output_files)
 
         # This is the bulk of the computation.  Everything else below is just binning by cutoff score.
