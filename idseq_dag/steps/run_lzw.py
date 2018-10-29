@@ -28,12 +28,21 @@ class PipelineStepRunLZW(PipelineStep):
     def run(self):
         input_fas = self.input_files_local[0]
         output_fas = self.output_files_local()
-        cutoff_fractions = self.additional_attributes["thresholds"]
+        readlength = count.max_readlength
+        cutoff_fractions = [
+          self.default_cutoff(readlength),
+          self.default_cutoff(readlength + 100)
+        ]
         PipelineStepRunLZW.generate_lzw_filtered(input_fas, output_fas, cutoff_fractions)
 
     def count_reads(self):
         self.should_count_reads = True
         self.counts_dict[self.name] = count.reads_in_group(self.output_files_local()[0:2])
+
+    @staticmethod
+    def default_cutoff(readlength):
+        ''' to be refined '''
+        return -0.133*math.log(readlength) + 1.116
 
     @staticmethod
     def lzw_fraction(sequence):

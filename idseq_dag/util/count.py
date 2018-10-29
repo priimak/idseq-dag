@@ -32,6 +32,17 @@ def reads(local_file_path, max_reads=None):
     line_count = int(command.execute_with_output(cmd))
     return lines2reads(line_count, file_format)
 
+def max_readlength(local_file_path, from_lines=100):
+    max_length = 0
+    with open(local_file_path, 'r') as f:
+        for idx in range(0, from_lines):
+            line = f.readline()
+            if idx % 2 == 0:
+                seq_length = len(line)
+                if seq_length > max_length:
+                    max_length = seq_length
+    return max_length
+
 def lines2reads(line_count, file_format):
     '''
     Convert line count to read count based on file format.
