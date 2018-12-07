@@ -179,7 +179,7 @@ class PipelineStepRunStar(PipelineStep):
         TODO: Add support for multiline fasta. We do not have control over the inputs uploaded
         by the user, so our assumption of single-line fasta will probably be violated in the future.
         """
-        res = self.additional_attributes["truncate_fragments_to"] * 2
+        res = 2330000
         if "fasta" not in input_file:  # Assume it's FASTQ
             res *= 2
         return res
