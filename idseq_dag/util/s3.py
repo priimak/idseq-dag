@@ -57,7 +57,7 @@ def install_s3mi(installed={}, mutex=threading.RLock()):  #pylint: disable=dange
         try:
             # This is typically a no-op.
             command.execute(
-                "which s3mi || pip install git+git://github.com/chanzuckerberg/s3mi.git"
+                "grep os.write /usr/local/bin/s3mi || pip3 install --upgrade git+git://github.com/chanzuckerberg/s3mi.git@boris/nitro_instance_support"
             )
             command.execute(
                 "s3mi tweak-vm || echo s3mi tweak-vm sometimes fails under docker. Continuing..."
