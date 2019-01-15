@@ -15,7 +15,7 @@ class PipelineStepRunTrimmomatic(PipelineStep):
 
         See: http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf
         """
-        input_files = self.input_files_local[0][0:2]
+        input_files = self.input_files_local[0][1:3]
         output_files = self.output_files_local()
         is_paired = (len(input_files) == 2)
         adapter_fasta = s3.fetch_from_s3(

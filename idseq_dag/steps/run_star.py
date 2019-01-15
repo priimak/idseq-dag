@@ -14,7 +14,7 @@ class PipelineStepRunStar(PipelineStep):
         """Run STAR to filter out host reads."""
         # Setup
         validated_input_counts_file = self.input_files_local[0][0]
-        input_files = self.input_files_local[0][1:3]
+        input_files = self.input_files_local[1][0:2]
         num_inputs = len(input_files)
         scratch_dir = os.path.join(self.output_dir_local, "scratch_star")
 
