@@ -242,7 +242,9 @@ class PipelineStepGeneratePhyloTree(PipelineStep):
         nt_loc_dict = shelve.open(nt_loc_db.replace(".db", ""))
         accessions = accessions.union(set([
             acc for acc in [
-                'CP001233.1', 'CP001234.1', 'AE003852.1', 'AE003853.1', 'CP001485.1', 'CP001486.1'
+                'CP001233.1', 'CP001234.1', 'AE003852.1', 'AE003853.1', 'CP001485.1', 'CP001486.1',
+                'GCA_000237465.2', 'GCA_000237405.2', 'GCA_000237485.2', 'GCA_000237425.2', 'GCA_000237445.2',
+                'ACVW01000014.1', 'AAKF03000013.1'
             ] if acc in nt_loc_dict
         ]))
 
