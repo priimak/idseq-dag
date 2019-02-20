@@ -238,6 +238,14 @@ class PipelineStepGeneratePhyloTree(PipelineStep):
         if len(accessions) > n:
             accessions = set(list(accessions)[0:n])
 
+        ### HACK: ADD SOME OTHER REQUESTED VIBRIO CHOLERAE ACCESSIONS
+        nt_loc_dict = shelve.open(nt_loc_db.replace(".db", ""))
+        accessions = accessions.union(set([
+            acc for acc in [
+                'CP001233.1', 'CP001234.1', 'AE003852.1', 'AE003853.1', 'CP001485.1', 'CP001486.1'
+            ] if acc in nt_loc_dict
+        ]))
+
         # Make map of accession to sequence file
         accession2info = dict((acc, {}) for acc in accessions)
         nt_loc_dict = shelve.open(nt_loc_db.replace(".db", ""))
