@@ -222,10 +222,10 @@ class PipelineFlow(object):
                 step.wait_until_all_done()
             except Exception as e:
                 # Some exception thrown by one of the steps
+                log.write(e)
                 traceback.print_exc()
-                for s in step_instances:
+                # for s in step_instances:
                     # notify the waiting step instances to self destruct
-                    s.stop_waiting()
+                    # s.stop_waiting()
                 log.write("An exception was thrown. Stage failed.")
-                raise e
         log.write("all steps are done")

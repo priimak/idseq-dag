@@ -153,6 +153,7 @@ def fetch_byterange(first_byte, last_byte, bucket, key, output_file):
                 f"--range bytes={first_byte}-{last_byte} " \
                 f"--bucket {bucket} " \
                 f"--key {key} {output_file}"
+    log.write(f"COMMAND: {get_range}")
     get_range_proc = subprocess.Popen(get_range, shell=True, stdout=subprocess.DEVNULL)
     get_range_proc.wait()
 
