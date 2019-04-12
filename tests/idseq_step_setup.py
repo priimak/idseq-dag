@@ -76,8 +76,8 @@ class IdseqStepSetup(object):
         od = output_dir_s3 or dag["output_dir_s3"]
         output_dir_s3 = os.path.join(od,
                                      f"testrun_{step_name}_{int(time.time())}")
-        result_dir_local = f"/mnt/idseq/results/{step_name}/{os.getpid()}"
-        ref_dir_local = '/mnt/idseq/ref'
+        result_dir_local = f"/Users/markzhang/Documents/projects/idseq-dag-test/results/{step_name}/{os.getpid()}"
+        ref_dir_local = '/Users/markzhang/Documents/projects/idseq-dag-test/ref'
         command.execute(f"mkdir -p {result_dir_local} {ref_dir_local}")
 
         input_files = []

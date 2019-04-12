@@ -1,0 +1,34 @@
+{
+  "output_dir_s3": "s3://idseq-samples-development/markazhang/samples_12452/download_accessions_test",
+  "targets": {
+    "gsnap_out": [
+        "gsnap.m8",
+        "gsnap.deduped.m8",
+        "gsnap.hitsummary.tab",
+        "gsnap_counts.json"
+    ],
+    "gsnap_accessions_out": ["nt.refseq.fasta", "accession_summary.tab"]
+  },
+  "steps": [
+    {
+      "in": ["gsnap_out"],
+      "out": "gsnap_accessions_out",
+      "class": "PipelineStepDownloadAccessions",
+      "module": "idseq_dag.steps.download_accessions",
+      "additional_files": {
+        "lineage_db": "s3://idseq-database/taxonomy/2018-12-01/taxid-lineages.sqlite3",
+        "loc_db": "s3://idseq-database/alignment_data/2018-12-01/nt_loc.sqlite3"
+      },
+      "additional_attributes": {
+          "db": "s3://idseq-database/alignment_data/2018-12-01/nt",
+          "db_type": "nt",
+          "generate_size_only": false
+      }
+    }
+  ],
+  "given_targets": {
+    "gsnap_out": {
+      "s3_dir": "s3://idseq-samples-development/samples/234/12452/results/3.5"
+    }
+  }
+}
