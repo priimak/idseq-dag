@@ -62,7 +62,7 @@ class PipelineStepGenerateLocDB(PipelineStep):
                     s = re.match('^>([^ ]*) ([^\x01]*).*', line)
                     if s:
                         accession_id = s.group(1)
-                        accession_name = s.group(2)
+                        accession_name = s.group(2).strip()
                 else:
                     seq_len += len(line)
                     seq_bp_len += len(line.strip())

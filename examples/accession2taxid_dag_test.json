@@ -1,14 +1,14 @@
 {
-  "output_dir_s3": "s3://idseq-samples-development/markazhang/accession_test/2018-12-01",
+  "output_dir_s3": "s3://idseq-samples-development/markazhang/accession_test_strip/2018-12-01",
   "targets": {
     "accession2taxid_input": [
       "pdb.accession2taxid.gz"
     ],
     "nt_input": [
-       "nt.test"
+       "nt"
     ],
     "nr_input": [
-       "nr.test"
+       "nr"
     ],
     "accession2taxid_out": [
       "accession2taxid.gz",
@@ -17,12 +17,12 @@
       "taxid2wgs_accession.db"
     ],
     "nt_loc_out": [
-      "nt_loc.db",
-      "nt_info.db"
+      "nt_loc.sqlite3",
+      "nt_info.sqlite3"
     ],
     "nr_loc_out": [
-      "nr_loc.db",
-      "nr_info.db"
+      "nr_loc.sqlite3",
+      "nr_info.sqlite3"
     ]
   },
   "steps": [
