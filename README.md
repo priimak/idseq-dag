@@ -225,6 +225,11 @@ IDseq DAGs require the use of several indices prepared from files in NCBI. If yo
 TODO: Move this code over to the idseq-dag repo.
 
 ## Release notes
+- 3.6.0
+   - Add pipeline step to generate data for coverage visualization for IDseq report page. Data includes an index
+     file that maps taxons to accessions with available coverage data, as well as data files for each accession
+     that list various metrics including the coverage of the accession.
+
 - 3.5.0 ... 3.5.3
    - Add ability to run STAR further downstream from input validation. This can be used to filter human reads
      after the host has been filtered out (if host is non-human).
@@ -237,7 +242,7 @@ TODO: Move this code over to the idseq-dag repo.
 - 3.4.0
    - switch from shelve to sqlite3 for all the lookup tables
    - add lineage generation step
-   
+
 - 3.3.2
    - Add input validation step.
 
