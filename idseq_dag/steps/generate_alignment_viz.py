@@ -54,26 +54,25 @@ class PipelineStepGenerateAlignmentViz(PipelineStep):
             annotated_m8, read2seq)
 
         # Check if nt_db is already downloaded
-        is_nt_local = (not nt_db.startswith("s3://"))
-        if not is_nt_local:
+        if nt_db.startswith("s3://"):
             potential_nt_db = os.path.join(self.ref_dir_local, os.path.basename(nt_db))
             if os.path.isfile(potential_nt_db):
                 nt_db = potential_nt_db
-                is_nt_local = True
 
         # If nt_db is not yet downloaded, but there are too many accessions to be fetched,
         # then do download nt_db here
-        if not is_nt_local and len(groups) >= MIN_ACCESSIONS_WHOLE_DB_DOWNLOAD:
-            nt_db = s3.fetch_from_s3(nt_db, self.ref_dir_local, allow_s3mi=True)
-            is_nt_local = True
+        if nt_db.startswith("s3://") and len(groups) >= MIN_ACCESSIONS_WHOLE_DB_DOWNLOAD:
+            potential_nt_db = s3.fetch_from_s3(nt_db, self.ref_dir_local, allow_s3mi=True)
+            if potential_nt_db:
+                nt_db = potential_nt_db
 
-        if is_nt_local:
-            log.write("Getting sequences by accession list from file...")
-            PipelineStepGenerateAlignmentViz.get_sequences_by_accession_list_from_file(
-                groups, nt_loc_dict, nt_db)
-        else:
+        if nt_db.startswith("s3://"):
             log.write("Getting sequences by accession list from S3...")
             PipelineStepGenerateAlignmentViz.get_sequences_by_accession_list_from_s3(
+                groups, nt_loc_dict, nt_db)
+        else:
+            log.write("Getting sequences by accession list from file...")
+            PipelineStepGenerateAlignmentViz.get_sequences_by_accession_list_from_file(
                 groups, nt_loc_dict, nt_db)
 
         for accession_id, ad in groups.items():
