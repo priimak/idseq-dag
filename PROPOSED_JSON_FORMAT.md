@@ -1,7 +1,7 @@
 ## Proposed new json format for pipeline definition
 
 Here I describe changes that I would like to propose to current json format used to describe
-set pipeline. The goal here is to both simplify it and make it more generic. This presentation
+set pipeline. The goal here is to both simplify and make it more generic. This presentation
 is informal and uses examples to illustrate proposed changes:
 
 * Instead of `output_dir_s3` use `output_dst` and derive what that destination for output 
