@@ -18,7 +18,7 @@ files is from scheme of its string value. For example:
     ```python
    {
        "targets": {
-           "fastqs": ["s3://idseq-samples-prod/test_samples/1/fastqs"],
+           "fastqs": ["s3://idseq-samples-prod/test_samples/1/fastqs/a.fq"],
            "step1_out": ["foobar.fasta"],
            "step2_in_aux": ["s3://idseq-samples-prod/foo/bar/pig.fasta"],
            "result": ["report.pdf"]
@@ -39,17 +39,36 @@ files is from scheme of its string value. For example:
     ```
     If file in target is not local (listed with specific url scheme) we download it prior to 
     execution of the step that depends on it.
+* Introduce key `target_effects` that allows to do things like fragment counting. 
+    ```python
+   {
+       "targets": {
+           "fastqs": ["s3://idseq-samples-prod/test_samples/1/fastqs/a.fq"],
+           "step1_out": ["foobar.fasta"],
+           "step2_in_aux": ["s3://idseq-samples-prod/foo/bar/pig.fasta"],
+           "result": ["report.pdf"]
+       },
+       "target_filters": {
+           "fastqs": {
+               "name": "count_fragments",
+               "count_reads": 1,
+               "max_fragments": 75000000
+           }
+       }
+   }
+    ```
 * Allow referencing any top level key-string object by it is name. For example we can use that
 to simplify above example like so
     ```python
    {
        "src_base": "s3://idseq-samples-prod",
        "targets": {
-           "fastqs": ["${src_base}/test_samples/1/fastqs"],
+           "fastqs": ["${src_base}/test_samples/1/fastqs/a.fq"],
            "step1_out": ["foobar.fasta"],
            "step2_in_aux": ["${src_base}/foo/bar/pig.fasta"],
            "result": ["report.pdf"]
        },
+       "target_filters": { ... }
        "steps": [
             ...
        ]      
@@ -66,6 +85,7 @@ Later ones are merged with `global_attributes` and passed to execution step. For
       },
       "output_dst": "..."
       "targets": { ... },
+      "target_filters": { ... }
       "steps": [
           {
               ...
