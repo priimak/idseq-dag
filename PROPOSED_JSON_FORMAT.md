@@ -81,5 +81,6 @@ Later ones are merged with `global_attributes` and passed to execution step. For
                  "chunk_size": 10000, "max_concurrent": 6
               }
           }
+      ]
    }
     ```
