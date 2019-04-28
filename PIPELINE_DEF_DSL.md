@@ -4,6 +4,7 @@ Scala-like language). Using it instead of json users can take advantage of the f
 of proper language. For example we not longer need to do anything to support variable substitution.
 ```scala
 input_base = "s3://idseq-samples-prod/test_samples/1/fastqs"
+gsnapBase = "subsample_1000000"
 pipeline_def = PipelineDefinition()
 
 pipeline_def.setOutputDefinition("s3://idseq-samples-prod/test_samples/1/results")
@@ -13,10 +14,10 @@ pipeline_def += Seq(
     Target("star_out",     "unmapped.star.1.fq"),
     Target("priceseq_out", "priceseqfilter.unmapped.star.1.fasta")
     Target("gsnap_out",
-        "subsample_1000000/multihit.gsnapl.unmapped.bowtie2.lzw.cdhitdup.priceseqfilter.unmapped.star.m8",
-        "subsample_1000000/dedup.multihit.gsnapl.unmapped.bowtie2.lzw.cdhitdup.priceseqfilter.unmapped.star.m8",
-        "subsample_1000000/summary.multihit.gsnapl.unmapped.bowtie2.lzw.cdhitdup.priceseqfilter.unmapped.star.tab",
-        "subsample_1000000/nt_multihit_idseq_web_sample.json"),
+        "$gsnapBase/multihit.gsnapl.unmapped.bowtie2.lzw.cdhitdup.priceseqfilter.unmapped.star.m8",
+        "$gsnapBase/dedup.multihit.gsnapl.unmapped.bowtie2.lzw.cdhitdup.priceseqfilter.unmapped.star.m8",
+        "$gsnapBase/summary.multihit.gsnapl.unmapped.bowtie2.lzw.cdhitdup.priceseqfilter.unmapped.star.tab",
+        "$gsnapBase/nt_multihit_idseq_web_sample.json"),
     Target("star_genome",
           "s3://idseq-database/host_filter/human/2018-02-15-utc-1518652800-unixtime__2018-02-15-utc-1518652800-unixtime/STAR_genome.tar")
 )
