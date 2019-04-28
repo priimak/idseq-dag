@@ -2,7 +2,7 @@
 idseq-dag is a simple pipeline execution engine. It takes a description of execution steps
 connected in a fashion of directed acyclic graph (DAG) and executes them to the maximum degree
 of parallelism possible. Execution steps are connected by means if output parameters of certain
-steps that in turn become intput parameter to other steps. A particular pipeline definition
+steps that in turn become input parameter to other steps. A particular pipeline definition
 is expected to be in json file with specific format (defined below).
 
 The steps themselves are python classes that extend `PipelineStep` class. They are generic 
@@ -27,7 +27,7 @@ pairs with following top level keys:
     Execution steps are expected to generate targets (i.e. all files listed in 
     a given target) and targets are also listed as dependencies for steps.
 - `given_targets`: files to be downloaded prior to the execution of the pipeline.
-- `steps`: list of exeuction steps where each steps is a map with following keys
+- `steps`: list of execution steps where each steps is a map with following keys
     - `in`: list of target dependencies
     - `out`: name of the target that defines output files
     - `class`: name of the class that implements `PipelineStep`
