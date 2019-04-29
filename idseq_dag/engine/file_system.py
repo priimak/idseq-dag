@@ -1,7 +1,9 @@
 import os
 from urllib.parse import urlparse
 
-from idseq_dag.util.s3 import check_s3_presence_for_file_list
+from idseq_dag.util.s3 import check_s3_presence_for_file_list, fetch_from_s3, check_s3_presence
+from shutil import copy
+
 
 # Collection of classes and utility functions to work with files and directories including those that are found
 # in S3 and possibly other key-value stores.
@@ -12,12 +14,12 @@ class Path():
     are allowed. Currently we allow only s3:// and file://
     """
     def __init__(self, url_str):
-        self.url =  urlparse(url_str)
+        self.url = urlparse(url_str)
         if self.url.scheme == '':
             raise ValueError("Missing scheme")
         elif self.url.scheme != 's3' and self.url.scheme != 'file':
             raise ValueError("Unrecognized scheme")
-        self.path = os.path.join(self.url.netloc, self.url.path)
+        self.path = os.path.join("/" + self.url.netloc + "/", self.url.path[1:].rstrip('/'))
 
 class File(Path):
     """
@@ -36,7 +38,26 @@ class File(Path):
         """
         Create new instance of File object with new path replacing old one.
         """
-        File(self.url.scheme + ':' + newPath)
+        return File(self.url.scheme + ':' + newPath)
+
+    def copyTo(self, destination_dir):
+        """
+        Copy this file to destination directory in the local filesystem
+        :return: Full path to the copied file in the local filesystem
+        """
+        os.makedirs(destination_dir, exist_ok=True)
+        if self.url.scheme == "s3":
+            return fetch_from_s3(str(self.url), destination_dir, allow_s3mi=True)
+        elif self.url.scheme == "file":
+            s = copy(self.path, destination_dir)
+            print("SSS" + str(s) + "\n")
+            return str(s)
+
+    def exist(self):
+        if self.url.scheme == "s3":
+            return check_s3_presence(self.url.geturl())
+        elif self.url.scheme == "file":
+            return os.path.exists(self.path) and os.path.isfile(self.path)
 
 class Dir(Path):
     """
@@ -51,7 +72,7 @@ class Dir(Path):
         """
         Create new instance of Dir object with new path replacing old one.
         """
-        Dir(self.url.scheme + ':' + newPath)
+        return Dir(self.url.scheme + ':' + newPath)
 
     def check_files_exist(self, file_list):
         """
@@ -59,7 +80,7 @@ class Dir(Path):
         and False otherwise.
         """
         if self.url.scheme == "s3":
-            check_s3_presence_for_file_list(self.url.geturl(), file_list)
+            return check_s3_presence_for_file_list(self.url.geturl(), file_list)
         else:
             for file_name in file_list:
                 full_file_name = os.path.join(self.path, file_name)

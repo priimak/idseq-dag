@@ -26,7 +26,7 @@ class PipelineStep(object):
         self.input_files = input_files # list of list files
         self.output_files = output_files # s3 location
         self.output_dir_local = output_dir_local
-        self.output_dir_s3 = output_dir_s3.rstrip('/')
+        self.output_dir_s3 = output_dir_s3
         self.ref_dir_local = ref_dir_local
         self.create_local_dirs()
 
@@ -79,7 +79,7 @@ class PipelineStep(object):
         for f in files_to_upload:
             # upload to S3 - TODO(Boris): parallelize the following with better calls
             s3_path = self.s3_path(f)
-            idseq_dag.util.s3.upload_with_retries(f, s3_path)
+            idseq_dag.util.s3.upload_with_retries(f, s3_path) # TODO: Fix me
         for f in self.additional_folders_to_upload:
             idseq_dag.util.s3.upload_folder_with_retries(f, self.s3_path(f))
         self.status = StepStatus.UPLOADED
@@ -164,5 +164,5 @@ class PipelineStep(object):
 
     def s3_path(self, local_path):
         relative_path = os.path.relpath(local_path, self.output_dir_local)
-        s3_path = os.path.join(self.output_dir_s3, relative_path)
+        s3_path = os.path.join("/" + self.output_dir_s3.url.scheme + "/", self.output_dir_s3.path, relative_path)
         return s3_path
