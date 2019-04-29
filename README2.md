@@ -6,7 +6,10 @@ steps that in turn become input parameter to other steps. A particular pipeline 
 is expected to be in json file with specific format (defined below).
 
 The steps themselves are python classes that extend `PipelineStep` class. They are generic 
-and users can provide any implementation not in any shape or form related to idseq project. 
+and users can provide any implementation not in any shape or form related to idseq project.
+Note that while pipeline engine provides support for downloading prerequisite dependencies
+for each step, class implementing any given step may itself initiate downloading any objects
+s3 store.
 
 Once idseq-dag installed it can be used to run any specific pipeline like so
 
