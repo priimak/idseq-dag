@@ -1,7 +1,7 @@
 import os
 from urllib.parse import urlparse
 
-from idseq_dag.util.s3 import check_s3_presence_for_file_list, fetch_from_s3, check_s3_presence
+from idseq_dag.util.s3 import check_s3_presence_for_file_list, fetch_from_s3, check_s3_presence, upload_with_retries
 from shutil import copy
 
 
@@ -49,9 +49,19 @@ class File(Path):
         if self.url.scheme == "s3":
             return fetch_from_s3(str(self.url), destination_dir, allow_s3mi=True)
         elif self.url.scheme == "file":
-            s = copy(self.path, destination_dir)
-            print("SSS" + str(s) + "\n")
-            return str(s)
+            return str(copy(self.path, destination_dir))
+
+    def copyFrom(self, source_file):
+        """
+        Copy source file into destination indicated by this File object
+        :param source_file:
+        :return:
+        """
+        if self.url.scheme == "s3":
+            upload_with_retries(source_file, str(self.url.geturl()))
+        elif self.url.scheme == "file":
+            os.makedirs(os.path.dirname(self.path), exist_ok=True)
+            copy(source_file, self.path)
 
     def exist(self):
         if self.url.scheme == "s3":
@@ -70,7 +80,7 @@ class Dir(Path):
 
     def withNewPath(self, newPath):
         """
-        Create new instance of Dir object with new path replacing old one.
+        Create new instance of Dir object with new path replacing old one but the same scheme.
         """
         return Dir(self.url.scheme + ':' + newPath)
 

@@ -1,7 +1,7 @@
 {
-  "output_dir_s3": "file://home/priimak/tmp",
+  "output_dir_s3": "file://tmp/count_lines",
   "targets": {
-    "files_to_count": ["missfont.log"],
+    "files_to_count": ["passwd", "group"],
     "result": ["line_count.txt"]
   },
   "steps": [
@@ -16,7 +16,7 @@
   ],
   "given_targets": {
     "files_to_count": {
-      "s3_dir": "file://home/priimak"
+      "s3_dir": "file://etc"
     }  
   }
 }
